@@ -22,7 +22,11 @@ module Administrate
 
     class << self
       def model
-        to_s.chomp(DASHBOARD_SUFFIX).classify.constantize
+        if to_s.include?("Control")
+          to_s.chomp(DASHBOARD_SUFFIX).gsub("Control::", "").classify.constantize
+        else
+          to_s.chomp(DASHBOARD_SUFFIX).classify.constantize
+        end
       end
 
       def resource_name(opts)
