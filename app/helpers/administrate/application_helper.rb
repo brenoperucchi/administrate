@@ -17,7 +17,12 @@ module Administrate
     end
 
     def dashboard_from_resource(resource_name)
-      "#{resource_name.to_s.singularize}_dashboard".classify.constantize
+      if "#{resource_name.to_s.singularize}_dashboard".classify.is_a_defined_class?
+        "#{resource_name.to_s.singularize}_dashboard".classify.constantize
+      else
+        "Control::#{resource_name.to_s.singularize.classify}_dashboard".classify.constantize
+      end
+
     end
 
     def model_from_resource(resource_name)
