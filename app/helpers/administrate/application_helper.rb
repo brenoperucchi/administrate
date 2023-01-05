@@ -17,7 +17,9 @@ module Administrate
     end
 
     def dashboard_from_resource(resource_name)
-      "#{resource_name.to_s.singularize}_dashboard".classify.constantize
+      dashboard = "#{resource_name.to_s.singularize}_dashboard".to_class
+      dashboard ||= "Control::#{resource_name.to_s.singularize}_dashboard".to_class
+      dashboard
     end
 
     def model_from_resource(resource_name)
