@@ -49,7 +49,9 @@ module Administrate
       private
 
       def associated_dashboard
-        "#{associated_class_name}Dashboard".constantize.new
+        associated_dashboard = "#{associated_class_name}Dashboard".to_class
+        associated_dashboard ||= "Control::#{associated_class_name}Dashboard".to_class
+        associated_dashboard.new
       end
 
       def primary_key
