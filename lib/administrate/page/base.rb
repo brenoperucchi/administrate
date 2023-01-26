@@ -7,8 +7,8 @@ module Administrate
       end
 
       def resource_name
-        @resource_name ||=
-          dashboard.class.to_s.scan(/(.+)Dashboard/).first.first.underscore
+        @resource_name =
+          dashboard.class.to_s.scan(/(.+)Dashboard/).first.first.underscore.gsub("control/", "")
       end
 
       def resource_path
