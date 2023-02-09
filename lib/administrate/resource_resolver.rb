@@ -5,7 +5,11 @@ module Administrate
     end
 
     def dashboard_class
-      ActiveSupport::Inflector.constantize("#{resource_class_name}Dashboard")
+      namespace_alternate = I18n.t('administrate.namespace_alternate').capitalize
+      if namespace == namespace_alternate.downcase.to_sym
+        klass = ActiveSupport::Inflector.safe_constantize("#{namespace_alternate}::#{resource_class_name}Dashboard")
+      end
+      klass ||= ActiveSupport::Inflector.constantize("#{resource_class_name}Dashboard")
     end
 
     def namespace
@@ -35,7 +39,8 @@ module Administrate
     end
 
     def controller_path_parts
-      controller_path.split("/")[1..-1].map(&:singularize)
+      path_parts = controller_path.split("/")[1..-1]
+      path_parts << path_parts.pop.singularize
     end
 
     attr_reader :controller_path
