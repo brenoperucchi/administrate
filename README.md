@@ -31,6 +31,15 @@ en:
   ...
 ```
 
+#routes.rb
+```ruby
+namespace :control do
+  resources :customers
+   ...
+  end
+end
+```
+
 I created custom fields to Fields:belongs and Field::has_many to query only records that belong to the associations. I'll add them another time.
 
 --------------------------------------------------
