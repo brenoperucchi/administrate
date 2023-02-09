@@ -22,7 +22,16 @@ module Control
 end
 ```
 
-I created custom fields to Fields:belongs and Field::has_many to query only records that belong to the association.. I'll add them here another time.
+#en.yml or pt-BR
+```yml
+--
+en: 
+  administrate:
+    namespace_alternate: control
+  ...
+```
+
+I created custom fields to Fields:belongs and Field::has_many to query only records that belong to the associations. I'll add them another time.
 
 --------------------------------------------------
 # Administrate
