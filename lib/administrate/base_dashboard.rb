@@ -22,8 +22,9 @@ module Administrate
 
     class << self
       def model
-        if to_s.include?("Control")
-          to_s.chomp(DASHBOARD_SUFFIX).gsub("Control::", "").classify.constantize
+        namespace = I18n.t('administrate.namespace_alternate').capitalize
+        if to_s.include?(namespace)
+          to_s.chomp(DASHBOARD_SUFFIX).gsub("#{namespace}::", "").classify.constantize
         else
           to_s.chomp(DASHBOARD_SUFFIX).classify.constantize
         end
