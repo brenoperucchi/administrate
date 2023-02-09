@@ -5,7 +5,11 @@ module Administrate
     end
 
     def dashboard_class
-      ActiveSupport::Inflector.constantize("#{resource_class_name}Dashboard")
+      namespace_alternate = I18n.t('administrate.namespace_alternate').capitalize
+      if namespace == namespace_alternate.downcase.to_sym
+        klass = ActiveSupport::Inflector.safe_constantize("#{namespace_alternate}::#{resource_class_name}Dashboard")
+      end
+      klass ||= ActiveSupport::Inflector.constantize("#{resource_class_name}Dashboard")
     end
 
     def namespace
