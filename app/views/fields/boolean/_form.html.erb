@@ -20,7 +20,7 @@ By default, the input is a checkbox.
 </div>
 <div class="field-unit__field">
   <% if field.options[:enum] == true %>
-    <%= f.check_box field.attribute, {}, checked_value = "enable", unchecked_value = "disable" %>
+    <%= f.check_box field.attribute, {}, field.options[:checked], field.options[:unchecked] %>
   <% else %>
     <%= f.check_box field.attribute %>
 
