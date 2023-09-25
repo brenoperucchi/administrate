@@ -16,4 +16,10 @@ as a string representation of the boolean value.
 [1]: http://www.rubydoc.info/gems/administrate/Administrate/Field/Boolean
 %>
 
-<%= field.to_s %>
+<%= 
+if field.resource.settings.present? and field.resource.settings.has_key?(field.attribute)
+  field.resource.send(field.attribute).to_b.to_s
+else
+  field.to_s 
+end
+%>
