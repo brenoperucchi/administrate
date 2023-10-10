@@ -49,8 +49,21 @@ module Administrate
       private
 
       def associated_dashboard
+        namespace = I18n.t('administrate.namespace_alternate').capitalize
+        if options.key?(:dashboard) and options[:dashboard].try(:downcase).try(:to_s) == namespace.downcase
+          if "#{namespace}::#{associated_class_name}Dashboard".is_a_defined_class?
+            return "#{namespace}::#{associated_class_name}Dashboard".constantize.new
+          end
+        end
         "#{associated_class_name}Dashboard".constantize.new
       end
+
+      # def associated_dashboard
+      #  "#{associated_class_name}Dashboard".constantize.new
+      #   # associated_dashboard = "#{associated_class_name}Dashboard".to_class
+      #   # associated_dashboard ||= "Control::#{associated_class_name}Dashboard".to_class
+      #   # associated_dashboard.new
+      # end
 
       def primary_key
         # Deprecated, renamed `association_primary_key`

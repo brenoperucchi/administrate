@@ -19,5 +19,10 @@ By default, the input is a checkbox.
   <%= f.label field.attribute %>
 </div>
 <div class="field-unit__field">
-  <%= f.check_box field.attribute %>
+  <% if field.options[:enum] == true %>
+    <%= f.check_box field.attribute, {}, field.options[:checked], field.options[:unchecked] %>
+  <% else %>
+    <%= f.check_box field.attribute %>
+
+  <% end %>
 </div>

@@ -17,7 +17,13 @@ module Administrate
     end
 
     def dashboard_from_resource(resource_name)
-      "#{resource_name.to_s.singularize}_dashboard".classify.constantize
+      namespace = I18n.t('administrate.namespace_alternate').capitalize
+      if "#{resource_name.to_s.singularize}_dashboard".classify.is_a_defined_class?
+        "#{resource_name.to_s.singularize}_dashboard".classify.constantize
+      else
+        "#{namespace}::#{resource_name.to_s.singularize.classify}_dashboard".classify.constantize
+      end
+
     end
 
     def model_from_resource(resource_name)

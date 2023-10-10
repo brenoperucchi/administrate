@@ -1,3 +1,48 @@
+
+A solution to add another namespace in the administrate with different dashboards and controllers. Please let me know if you need any help.
+bperucchi@gmail.com
+
+example with customer model on namespace control:
+app/dashboards/control
+
+```ruby
+# app/dashboards/control/customer_dashboard.rb
+class Control::CustomerDashboard < Administrate::BaseDashboard
+...
+end
+```
+
+```ruby
+``
+# app/controllers/control/customers_controller.rb
+module Control
+  class CustomersController < Admin::ApplicationController
+    ...
+  end
+end
+```
+
+#en.yml or pt-BR
+```yml
+--
+en: 
+  administrate:
+    namespace_alternate: control
+  ...
+```
+
+#routes.rb
+```ruby
+namespace :control do
+  resources :customers
+   ...
+  end
+end
+```
+
+I created custom fields to Fields:belongs and Field::has_many to query only records that belong to the associations. I'll add them another time.
+
+--------------------------------------------------
 # Administrate
 
 [![CircleCI](https://img.shields.io/circleci/project/github/thoughtbot/administrate.svg)](https://circleci.com/gh/thoughtbot/administrate/tree/main)
