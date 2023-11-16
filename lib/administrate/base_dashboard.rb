@@ -68,12 +68,20 @@ module Administrate
     end
 
     def permitted_attributes
-      form_attributes.map do |attr|
+      form_advanced = []
+      form = form_attributes.map do |attr|
         attribute_types[attr].permitted_attribute(
           attr,
           resource_class: self.class.model,
         )
       end.uniq
+      form_advanced = form_attributes(:advanced).map do |attr|
+        attribute_types[attr].permitted_attribute(
+          attr,
+          resource_class: self.class.model,
+        )
+      end.uniq
+      (form + form_advanced).uniq
     end
 
     def show_page_attributes
