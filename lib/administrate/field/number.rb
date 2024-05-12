@@ -5,9 +5,7 @@ module Administrate
   module Field
     class Number < Field::Base
       def to_s
-        data = if data.class.to_s == "String"
-                 data.empty? ? nil : data.to_i
-               end
+        data = data.empty? ? nil : data.to_i if data.class.to_s == "String"
         result = data.nil? ? "-" : format_string % value
         result = format(result) if options[:format]
         prefix + result + suffix
