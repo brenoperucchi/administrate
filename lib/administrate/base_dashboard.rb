@@ -1,4 +1,5 @@
 require "administrate/field/belongs_to"
+require "administrate/field/delegate"
 require "administrate/field/belongs_to_field"
 require "administrate/field/boolean"
 require "administrate/field/date_time"
@@ -124,11 +125,18 @@ module Administrate
     end
 
     def attribute_includes(attributes)
-      attributes.map do |key|
+      attrs = attributes.map do |key|
         field = attribute_type_for(key)
 
         key if field.eager_load?
       end.compact
+      attrs.delete_if { |attr| self.class::DELEGATE_ATTRIBUTES.include?(attr) } if self.class.const_defined?('DELEGATE_ATTRIBUTES')
+                                    # have to add this in the controller /app/dashboards/xxx_dashboard.rb
+                                    # 
+                                    # DELEGATE_ATTRIBUTES = %i{
+                                    # store
+                                    # }
+      return attrs
     end
 
     def attribute_associated(attributes)
