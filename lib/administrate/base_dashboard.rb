@@ -6,6 +6,7 @@ require "administrate/field/date_time"
 require "administrate/field/date"
 require "administrate/field/email"
 require "administrate/field/has_many"
+require "administrate/field/has_many_scope"
 require "administrate/field/has_one"
 require "administrate/field/number"
 require "administrate/field/polymorphic"
@@ -130,12 +131,7 @@ module Administrate
 
         key if field.eager_load?
       end.compact
-      attrs.delete_if { |attr| self.class::DELEGATE_ATTRIBUTES.include?(attr) } if self.class.const_defined?('DELEGATE_ATTRIBUTES')
-                                    # have to add this in the controller /app/dashboards/xxx_dashboard.rb
-                                    # 
-                                    # DELEGATE_ATTRIBUTES = %i{
-                                    # store
-                                    # }
+      attrs.delete_if { |key| attribute_type_for(key).delegated? }
       return attrs
     end
 

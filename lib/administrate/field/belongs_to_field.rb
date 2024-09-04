@@ -1,6 +1,6 @@
 module Administrate
   module Field
-		class BelongsToField < Administrate::Field::BelongsTo
+		class BelongsToField < BelongsTo
 			include SentientStore
 
 			def scoped

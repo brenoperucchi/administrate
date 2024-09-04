@@ -8,6 +8,10 @@ module Administrate
         Deferred.new(self, options)
       end
 
+      def self.delegated?
+        self == Administrate::Field::Delegate
+      end
+
       def self.html_class
         field_type.dasherize
       end

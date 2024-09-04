@@ -21,6 +21,10 @@ module Administrate
           options == other.options
       end
 
+      def delegated?
+        deferred_class.delegated?
+      end
+
       def associative?
         deferred_class.associative?
       end
