@@ -39,10 +39,10 @@ RSpec.describe Administrate::ApplicationHelper do
             models: {
               customer: {
                 one: "User",
-                other: "Users",
-              },
-            },
-          },
+                other: "Users"
+              }
+            }
+          }
         }
       end
 
@@ -84,12 +84,14 @@ RSpec.describe Administrate::ApplicationHelper do
     end
 
     it "returns 'required' if field is required" do
-      name = page.attributes.detect { |i| i.attribute == :name }
+      name = page.attributes.values.flatten.detect { |i| i.attribute == :name }
       expect(requireness(name)).to eq("required")
     end
 
     it "returns 'optional' if field is not required" do
-      release_year = page.attributes.detect { |i| i.attribute == :release_year }
+      release_year = page.attributes.values.flatten.detect do |i|
+        i.attribute == :release_year
+      end
       expect(requireness(release_year)).to eq("optional")
     end
   end
@@ -112,10 +114,10 @@ RSpec.describe Administrate::ApplicationHelper do
         ctx.accessible_action?("my_resource", "foo")
 
         expect(ctx).to(
-          have_received(:existing_action?).with(:my_resource, "foo"),
+          have_received(:existing_action?).with(:my_resource, "foo")
         )
         expect(ctx).to(
-          have_received(:authorized_action?).with(:my_resource, "foo"),
+          have_received(:authorized_action?).with(:my_resource, "foo")
         )
       ensure
         remove_constants :MyResource
@@ -131,10 +133,10 @@ RSpec.describe Administrate::ApplicationHelper do
         ctx.accessible_action?(:my_resource, "foo")
 
         expect(ctx).to(
-          have_received(:existing_action?).with(:my_resource, "foo"),
+          have_received(:existing_action?).with(:my_resource, "foo")
         )
         expect(ctx).to(
-          have_received(:authorized_action?).with(:my_resource, "foo"),
+          have_received(:authorized_action?).with(:my_resource, "foo")
         )
       ensure
         remove_constants :MyResource
@@ -151,7 +153,7 @@ RSpec.describe Administrate::ApplicationHelper do
 
         expect(ctx).to have_received(:existing_action?).with(MyResource, "foo")
         expect(ctx).to(
-          have_received(:authorized_action?).with(MyResource, "foo"),
+          have_received(:authorized_action?).with(MyResource, "foo")
         )
       ensure
         remove_constants :MyResource

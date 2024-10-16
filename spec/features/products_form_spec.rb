@@ -17,7 +17,7 @@ describe "product form has_one relationship" do
 
     click_on "Create Product"
 
-    expect(page).to have_link(ProductMetaTag.last.id.to_s)
+    expect(page).to have_link("Example meta title")
     expect(page).to have_flash(
       t("administrate.controller.create.success", resource: "Product")
     )
@@ -30,8 +30,8 @@ describe "product form has_one relationship" do
 
     travel_to(1.year.ago) do
       visit new_admin_product_path
-      expect(page).
-        not_to have_select("Release year", with_options: [current_year])
+      expect(page)
+        .not_to have_select("Release year", with_options: [current_year])
     end
   end
 
@@ -40,8 +40,8 @@ describe "product form has_one relationship" do
     new_release_year = Administrate::Field::Select.with_options(
       collection: [
         ["Last Year", 2019],
-        ["This Year", 2020],
-      ],
+        ["This Year", 2020]
+      ]
     )
     ProductDashboard::ATTRIBUTE_TYPES[:release_year] = new_release_year
 
@@ -60,7 +60,7 @@ describe "product form has_one relationship" do
 
     click_on "Update Product"
 
-    expect(page).to have_link(product.product_meta_tag.id.to_s)
+    expect(page).to have_link(product.product_meta_tag.meta_title.to_s)
     expect(page).to have_flash(
       t("administrate.controller.update.success", resource: "Product")
     )
@@ -75,10 +75,10 @@ describe "product form has_one relationship" do
         helpers: {
           label: {
             product: {
-              product_meta_tag: custom_label,
-            },
-          },
-        },
+              product_meta_tag: custom_label
+            }
+          }
+        }
       }
 
       with_translations(:en, translations) do

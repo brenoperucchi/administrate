@@ -4,7 +4,8 @@ require "active_model/railtie"
 require "active_record/railtie"
 require "action_controller/railtie"
 require "action_view/railtie"
-require "sprockets/railtie"
+require "action_text/engine"
+require "active_storage/engine"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -25,10 +26,10 @@ module AdministratePrototype
     end
 
     config.action_controller.action_on_unpermitted_parameters = :raise
-    config.active_record.time_zone_aware_types = %i(datetime time)
+    config.active_record.time_zone_aware_types = %i[datetime time]
 
     # Opt-out of FLoC: https://amifloced.org/
-    config.action_dispatch.
-      default_headers["Permissions-Policy"] = "interest-cohort=()"
+    config.action_dispatch
+      .default_headers["Permissions-Policy"] = "interest-cohort=()"
   end
 end

@@ -1,48 +1,3 @@
-
-A solution to add another namespace in the administrate with different dashboards and controllers. Please let me know if you need any help.
-bperucchi@gmail.com
-
-example with customer model on namespace control:
-app/dashboards/control
-
-```ruby
-# app/dashboards/control/customer_dashboard.rb
-class Control::CustomerDashboard < Administrate::BaseDashboard
-...
-end
-```
-
-```ruby
-``
-# app/controllers/control/customers_controller.rb
-module Control
-  class CustomersController < Admin::ApplicationController
-    ...
-  end
-end
-```
-
-#en.yml or pt-BR
-```yml
---
-en: 
-  administrate:
-    namespace_alternate: control
-  ...
-```
-
-#routes.rb
-```ruby
-namespace :control do
-  resources :customers
-   ...
-  end
-end
-```
-
-I created custom fields to Fields:belongs and Field::has_many to query only records that belong to the associations. I'll add them another time.
-
---------------------------------------------------
 # Administrate
 
 [![CircleCI](https://img.shields.io/circleci/project/github/thoughtbot/administrate.svg)](https://circleci.com/gh/thoughtbot/administrate/tree/main)
@@ -113,20 +68,24 @@ community](https://github.com/thoughtbot/administrate/graphs/contributors).
 
 ## License
 
-administrate is Copyright © 2015-2019 thoughtbot.
+administrate is Copyright © 2015 thoughtbot.
 It is free software, and may be redistributed under the terms specified in the
 [LICENSE](/LICENSE.md) file.
 
+<!-- START /templates/footer.md -->
 ## About thoughtbot
 
-![thoughtbot](https://thoughtbot.com/brand_assets/93:44.svg)
+![thoughtbot](https://thoughtbot.com/thoughtbot-logo-for-readmes.svg)
 
-administrate is maintained and funded by thoughtbot, inc.
+This repo is maintained and funded by thoughtbot, inc.
 The names and logos for thoughtbot are trademarks of thoughtbot, inc.
 
 We love open source software!
-See [our other projects][community] or
-[hire us][hire] to design, develop, and grow your product.
+See [our other projects][community].
+We are [available for hire][hire].
 
 [community]: https://thoughtbot.com/community?utm_source=github
-[hire]: https://thoughtbot.com?utm_source=github
+[hire]: https://thoughtbot.com/hire-us?utm_source=github
+
+
+<!-- END /templates/footer.md -->

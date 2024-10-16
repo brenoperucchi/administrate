@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "build": "esbuild app/assets/javascripts/administrate/application.js --bundle --sourcemap --outdir=app/assets/builds/administrate --public-path=/assets/administrate",
+    "build:css": "sass ./app/assets/stylesheets/administrate/application.scss:./app/assets/builds/administrate/application.css ./app/assets/stylesheets/administrate-internal/docs.scss:./app/assets/builds/administrate-internal/docs.css --source-map --embed-sources --load-path=node_modules",
+    "lint:css": "stylelint app/assets/stylesheets/administrate/**/*.scss"
+  },
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.0",
+    "@rails/actiontext": "^7.1.3-2",
+    "esbuild": "^0.18.11",
+    "jquery": "^3.7.0",
+    "sass": "^1.63.6",
+    "selectize": "^0.12.6",
+    "trix": "^2.1.4"
+  },
+  "devDependencies": {
+    "@thoughtbot/stylelint-config": "^4.0.0",
+    "stylelint": "^16.2.1"
+  }
+}

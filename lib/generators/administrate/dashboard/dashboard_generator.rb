@@ -13,34 +13,42 @@ module Administrate
         time: "Field::Time",
         text: "Field::Text",
         string: "Field::String",
-        uuid: "Field::String",
+        uuid: "Field::String"
       }
 
       ATTRIBUTE_OPTIONS_MAPPING = {
         # procs must be defined in one line!
-        enum: {  searchable: false,
-                 collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys } },
-        float: { decimals: 2 },
+        enum: {searchable: false,
+               collection: ->(field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }},
+        float: {decimals: 2}
       }
 
       DEFAULT_FIELD_TYPE = "Field::String.with_options(searchable: false)"
       COLLECTION_ATTRIBUTE_LIMIT = 4
       READ_ONLY_ATTRIBUTES = %w[id created_at updated_at]
 
-      class_option :namespace, type: :string, default: :admin
+      class_option(
+        :namespace,
+        type: :string,
+        desc: "Namespace where the admin dashboards live",
+        default: "admin"
+      )
 
       source_root File.expand_path("../templates", __FILE__)
 
       def create_dashboard_definition
+        scope = regular_class_path.join("/")
+
         template(
           "dashboard.rb.erb",
-          Rails.root.join("app/dashboards/#{file_name}_dashboard.rb"),
+          Rails.root.join("app/dashboards/#{scope}/#{file_name}_dashboard.rb")
         )
       end
 
       def create_resource_controller
+        scope = "#{namespace}/#{regular_class_path.join("/")}"
         destination = Rails.root.join(
-          "app/controllers/#{namespace}/#{file_name.pluralize}_controller.rb",
+          "app/controllers/#{scope}/#{file_name.pluralize}_controller.rb"
         )
 
         template("controller.rb.erb", destination)
@@ -67,7 +75,7 @@ module Administrate
           primary_key,
           *attrs.sort,
           created_at,
-          updated_at,
+          updated_at
         ].compact
       end
 
@@ -111,7 +119,7 @@ module Administrate
 
       def enum_column?(attr)
         klass.respond_to?(:defined_enums) &&
-          klass.defined_enums.keys.include?(attr)
+          klass.defined_enums.key?(attr)
       end
 
       def column_types(attr)

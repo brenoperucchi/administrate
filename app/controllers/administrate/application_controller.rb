@@ -15,13 +15,13 @@ module Administrate
         resources: resources,
         search_term: search_term,
         page: page,
-        show_search_bar: show_search_bar?,
+        show_search_bar: show_search_bar?
       }
     end
 
     def show
       render locals: {
-        page: Administrate::Page::Show.new(dashboard, requested_resource),
+        page: Administrate::Page::Show.new(dashboard, requested_resource)
       }
     end
 
@@ -29,28 +29,29 @@ module Administrate
       resource = new_resource
       authorize_resource(resource)
       render locals: {
-        page: Administrate::Page::Form.new(dashboard, resource),
+        page: Administrate::Page::Form.new(dashboard, resource)
       }
     end
 
     def edit
       render locals: {
-        page: Administrate::Page::Form.new(dashboard, requested_resource),
+        page: Administrate::Page::Form.new(dashboard, requested_resource)
       }
     end
 
     def create
-      resource = resource_class.new(resource_params)
+      resource = new_resource(resource_params)
       authorize_resource(resource)
 
       if resource.save
+        yield(resource) if block_given?
         redirect_to(
           after_resource_created_path(resource),
-          notice: translate_with_resource("create.success"),
+          notice: translate_with_resource("create.success")
         )
       else
         render :new, locals: {
-          page: Administrate::Page::Form.new(dashboard, resource),
+          page: Administrate::Page::Form.new(dashboard, resource)
         }, status: :unprocessable_entity
       end
     end
@@ -60,10 +61,11 @@ module Administrate
         redirect_to(
           after_resource_updated_path(requested_resource),
           notice: translate_with_resource("update.success"),
+          status: :see_other
         )
       else
         render :edit, locals: {
-          page: Administrate::Page::Form.new(dashboard, requested_resource),
+          page: Administrate::Page::Form.new(dashboard, requested_resource)
         }, status: :unprocessable_entity
       end
     end
@@ -74,7 +76,7 @@ module Administrate
       else
         flash[:error] = requested_resource.errors.full_messages.join("<br/>")
       end
-      redirect_to after_resource_destroyed_path(requested_resource)
+      redirect_to after_resource_destroyed_path(requested_resource), status: :see_other
     end
 
     private
@@ -83,12 +85,12 @@ module Administrate
       Administrate::Search.new(
         resources,
         dashboard,
-        search_term,
+        search_term
       ).run
     end
 
     def after_resource_destroyed_path(_requested_resource)
-      { action: :index }
+      {action: :index}
     end
 
     def after_resource_created_path(requested_resource)
@@ -102,7 +104,7 @@ module Administrate
     helper_method :nav_link_state
     def nav_link_state(resource)
       underscore_resource = resource.to_s.split("/").join("__")
-      resource_name.to_s.pluralize == underscore_resource ? :active : :inactive
+      (resource_name.to_s.pluralize == underscore_resource) ? :active : :inactive
     end
 
     # Whether the named action route exists for the resource class.
@@ -140,8 +142,8 @@ module Administrate
         sorting_attribute,
         sorting_direction,
         association_attribute: order_by_field(
-          dashboard_attribute(sorting_attribute),
-        ),
+          dashboard_attribute(sorting_attribute)
+        )
       )
     end
 
@@ -200,9 +202,9 @@ module Administrate
     end
 
     def resource_params
-      params.require(resource_class.model_name.param_key).
-        permit(dashboard.permitted_attributes).
-        transform_values { |v| read_param_value(v) }
+      params.require(resource_class.model_name.param_key)
+        .permit(dashboard.permitted_attributes(action_name))
+        .transform_values { |v| read_param_value(v) }
     end
 
     def read_param_value(data)
@@ -214,6 +216,8 @@ module Administrate
         end
       elsif data.is_a?(ActionController::Parameters)
         data.transform_values { |v| read_param_value(v) }
+      elsif data.is_a?(String) && data.blank?
+        nil
       else
         data
       end
@@ -233,13 +237,13 @@ module Administrate
     def translate_with_resource(key)
       t(
         "administrate.controller.#{key}",
-        resource: resource_resolver.resource_title,
+        resource: resource_resolver.resource_title
       )
     end
 
     def show_search_bar?
       dashboard.attribute_types_for(
-        dashboard.all_attributes,
+        dashboard.all_attributes
       ).any? { |_name, attribute| attribute.searchable? }
     end
 
@@ -265,8 +269,8 @@ module Administrate
     end
     helper_method :show_action?
 
-    def new_resource
-      resource_class.new
+    def new_resource(params = {})
+      resource_class.new(params)
     end
     helper_method :new_resource
 
@@ -276,7 +280,7 @@ module Administrate
       else
         raise Administrate::NotAuthorizedError.new(
           action: action_name,
-          resource: resource,
+          resource: resource
         )
       end
     end

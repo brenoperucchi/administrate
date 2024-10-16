@@ -2,7 +2,7 @@ require "rails_helper"
 require "administrate/field/select"
 
 describe "fields/select/_form", type: :view do
-  it "displays the selected option" do
+  it "displays the field with correct name and selection" do
     customer = build(:customer)
     select = instance_double(
       "Administrate::Field::Select",
@@ -10,16 +10,39 @@ describe "fields/select/_form", type: :view do
       data: false,
       selectable_options: [true, false, nil],
       include_blank_option: false,
+      html_controller: "select"
     )
 
     render(
       partial: "fields/select/form",
-      locals: { field: select, f: form_builder(customer) },
+      locals: {field: select, f: form_builder(customer)}
     )
 
     expect(rendered).to have_css(
-      %{select[name="customer[email_subscriber]"]
-        option[value="false"][selected="selected"]},
+      %(select[name="customer[email_subscriber]"][data-controller~=select]
+        option[value="false"][selected="selected"])
+    )
+  end
+
+  it "can include a blank option" do
+    customer = build(:customer)
+    select = instance_double(
+      "Administrate::Field::Select",
+      attribute: :email_subscriber,
+      data: "Yes",
+      selectable_options: ["Yes", "No"],
+      include_blank_option: "Unknown",
+      html_controller: "select"
+    )
+
+    render(
+      partial: "fields/select/form",
+      locals: {field: select, f: form_builder(customer)}
+    )
+
+    expect(rendered).to have_css(
+      %(select[name="customer[email_subscriber]"][data-controller~="select"] option[value=""]),
+      text: "Unknown"
     )
   end
 
@@ -28,7 +51,7 @@ describe "fields/select/_form", type: :view do
       object.model_name.singular,
       object,
       build_template,
-      {},
+      {}
     )
   end
 
@@ -36,6 +59,7 @@ describe "fields/select/_form", type: :view do
     Object.new.tap do |template|
       template.extend ActionView::Helpers::FormHelper
       template.extend ActionView::Helpers::FormOptionsHelper
+      template.extend ActionView::Helpers::FormTagHelper
     end
   end
 end

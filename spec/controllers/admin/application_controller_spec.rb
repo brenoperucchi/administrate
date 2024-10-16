@@ -4,7 +4,7 @@ RSpec.describe Admin::ApplicationController, type: :controller do
   describe "redirections after actions" do
     controller(Admin::OrdersController) do
       def after_resource_destroyed_path(_requested_resource)
-        { action: :index, controller: :customers }
+        {action: :index, controller: :customers}
       end
 
       def after_resource_created_path(requested_resource)
@@ -19,7 +19,7 @@ RSpec.describe Admin::ApplicationController, type: :controller do
     it "redirect to custom route after destroy" do
       order = create(:order)
 
-      delete :destroy, params: { id: order.to_param }
+      delete :destroy, params: {id: order.to_param}
       expect(response).to redirect_to(admin_customers_path)
     end
 
@@ -30,19 +30,46 @@ RSpec.describe Admin::ApplicationController, type: :controller do
         "id",
         "created_at",
         "updated_at",
-        "shipped_at",
+        "shipped_at"
       )
 
-      post :create, params: { order: params }
+      post :create, params: {order: params}
       expect(response).to redirect_to(admin_customer_path(customer))
     end
 
     it "redirect to custom route after update" do
       order = create(:order)
-      order_params = { address_line_one: order.address_line_one }
+      order_params = {address_line_one: order.address_line_one}
 
-      put :update, params: { id: order.to_param, order: order_params }
+      put :update, params: {id: order.to_param, order: order_params}
       expect(response).to redirect_to(admin_customer_path(order.customer))
+    end
+  end
+
+  describe "creation yeilds resource" do
+    controller(Admin::OrdersController) do
+      attr_reader :resource
+
+      def create
+        super do |resource|
+          @resource = resource
+        end
+      end
+    end
+
+    it "yields the created resource after creation" do
+      customer = create(:customer)
+      order_attributes = build(:order, customer: customer).attributes
+      params = order_attributes.except(
+        "id",
+        "created_at",
+        "updated_at",
+        "shipped_at"
+      )
+
+      post :create, params: {order: params}
+
+      expect(controller.resource).to be_a(Order)
     end
   end
 
@@ -63,14 +90,14 @@ RSpec.describe Admin::ApplicationController, type: :controller do
 
     it "authorizes allowed actions" do
       resource = FactoryBot.create(:order, address_zip: "666")
-      expect { get :show, params: { id: resource.id } }.
-        not_to raise_error
+      expect { get :show, params: {id: resource.id} }
+        .not_to raise_error
     end
 
     it "does not authorize disallowed actions" do
       resource = FactoryBot.create(:order, address_zip: "667")
-      expect { get :show, params: { id: resource.id } }.
-        to raise_error(Administrate::NotAuthorizedError)
+      expect { get :show, params: {id: resource.id} }
+        .to raise_error(Administrate::NotAuthorizedError)
     end
   end
 
@@ -82,11 +109,11 @@ RSpec.describe Admin::ApplicationController, type: :controller do
     end
 
     it "triggers a deprecation warning" do
-      allow(ActiveSupport::Deprecation).to receive(:warn)
+      allow(Administrate.deprecator).to receive(:warn)
       get :index
-      expect(ActiveSupport::Deprecation).to(
-        have_received(:warn).
-          with(/`show_action\?` is deprecated/),
+      expect(Administrate.deprecator).to(
+        have_received(:warn)
+          .with(/`show_action\?` is deprecated/)
       )
     end
   end
@@ -99,11 +126,11 @@ RSpec.describe Admin::ApplicationController, type: :controller do
     end
 
     it "triggers a deprecation warning" do
-      allow(ActiveSupport::Deprecation).to receive(:warn)
+      allow(Administrate.deprecator).to receive(:warn)
       get :index
-      expect(ActiveSupport::Deprecation).to(
-        have_received(:warn).
-          with(/`valid_action\?` is deprecated/),
+      expect(Administrate.deprecator).to(
+        have_received(:warn)
+          .with(/`valid_action\?` is deprecated/)
       )
     end
   end

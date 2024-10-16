@@ -1,4 +1,6 @@
 class Product < ApplicationRecord
+  has_rich_text :banner
+
   def self.policy_class=(policy)
     @policy_class = policy
   end
@@ -18,10 +20,10 @@ class Product < ApplicationRecord
   validates :name, presence: true
   validates :price, presence: true
   validates :release_year,
-            numericality: {
-              less_than_or_equal_to: ->(_product) { Time.current.year },
-            },
-            allow_blank: true
+    numericality: {
+      less_than_or_equal_to: ->(_product) { Time.current.year }
+    },
+    allow_blank: true
   validates :slug, uniqueness: true
   validates :product_meta_tag, presence: true, on: :some_unclear_situation
   validate :valid_slug
@@ -30,7 +32,7 @@ class Product < ApplicationRecord
 
   def name=(value)
     self.slug = value.to_s.parameterize
-    super(value)
+    super
   end
 
   def to_param

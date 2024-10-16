@@ -16,7 +16,7 @@ describe LineItemDashboard do
             product
             quantity
             unit_price
-          ],
+          ]
         )
       end
     end
@@ -29,7 +29,7 @@ describe LineItemDashboard do
           %i[
             order
             product
-          ],
+          ]
         )
       end
     end
@@ -43,7 +43,7 @@ describe LineItemDashboard do
             order
             product
             quantity
-          ],
+          ]
         )
       end
     end
@@ -58,9 +58,28 @@ describe LineItemDashboard do
             product
             quantity
             unit_price
-          ],
+          ]
         )
       end
+    end
+  end
+
+  describe "#permitted_attributes" do
+    it "returns the attribute name by default" do
+      attributes = ["order_id", "product_id", :quantity, :unit_price]
+      expect(dashboard.permitted_attributes).to eq(attributes)
+    end
+
+    it "returns the attribute name for new/create actions" do
+      attributes = ["order_id", "product_id"]
+      expect(dashboard.permitted_attributes("new")).to eq(attributes)
+      expect(dashboard.permitted_attributes("create")).to eq(attributes)
+    end
+
+    it "returns the attribute name for edit/update actions" do
+      attributes = ["order_id", "product_id", :quantity]
+      expect(dashboard.permitted_attributes("edit")).to eq(attributes)
+      expect(dashboard.permitted_attributes("update")).to eq(attributes)
     end
   end
 end

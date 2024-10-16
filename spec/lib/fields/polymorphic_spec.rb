@@ -7,6 +7,17 @@ require "support/field_matchers"
 describe Administrate::Field::Polymorphic do
   include FieldMatchers
 
+  describe "#html_controller" do
+    it "returns select" do
+      page = :show
+      field = Administrate::Field::Polymorphic.new(:foo, "hello", page)
+
+      html_controller = field.html_controller
+
+      expect(html_controller).to eq("select")
+    end
+  end
+
   describe "#to_partial_path" do
     it "returns a partial based on the page being rendered" do
       page = :show
@@ -20,29 +31,27 @@ describe Administrate::Field::Polymorphic do
 
   it do
     should_permit_param(
-      { "foo" => %i{type value} },
+      {"foo" => %i[type value]},
       on_model: Customer,
-      for_attribute: :foo,
+      for_attribute: :foo
     )
   end
 
   describe "#display_associated_resource" do
     it "displays through the dashboard based on the polymorphic class name" do
-      begin
-        Thing = Class.new
-        ThingDashboard = Class.new do
-          def display_resource(*)
-            :success
-          end
+      Thing = Class.new
+      ThingDashboard = Class.new do
+        def display_resource(*)
+          :success
         end
-
-        field = Administrate::Field::Polymorphic.new(:foo, Thing.new, :show)
-        display = field.display_associated_resource
-
-        expect(display).to eq :success
-      ensure
-        remove_constants :Thing, :ThingDashboard
       end
+
+      field = Administrate::Field::Polymorphic.new(:foo, Thing.new, :show)
+      display = field.display_associated_resource
+
+      expect(display).to eq :success
+    ensure
+      remove_constants :Thing, :ThingDashboard
     end
   end
 
@@ -71,11 +80,20 @@ describe Administrate::Field::Polymorphic do
     end
 
     context "present in options" do
-      it "returns an present value" do
+      it "returns a present value" do
         classes = ["one", "two", "three"]
         allow(field).to receive(:options).and_return(classes: classes)
 
         expect(field.send(:classes)).to eq(classes)
+      end
+    end
+
+    context "present in options as a call-able object" do
+      it "returns the called value" do
+        classes = -> { ["one", "two", "three"] }
+        allow(field).to receive(:options).and_return(classes: classes)
+
+        expect(field.send(:classes)).to eq(classes.call)
       end
     end
   end

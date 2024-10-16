@@ -15,7 +15,7 @@ Rails.application.configure do
   if config.respond_to?(:public_file_server)
     config.public_file_server.enabled = true
     config.public_file_server.headers = {
-      "Cache-Control" => "public, max-age=3600",
+      "Cache-Control" => "public, max-age=3600"
     }
   else
     config.serve_static_files = true
@@ -23,7 +23,7 @@ Rails.application.configure do
   end
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
   config.cache_store = :null_store
 
@@ -43,9 +43,17 @@ Rails.application.configure do
   config.active_support.disallowed_deprecation_warnings = []
 
   # Raises error for missing translations.
-  if Gem::Version.new(Rails.version) <= Gem::Version.new("6.1")
+
+  if Rails.gem_version <= Gem::Version.new("6.1")
     config.action_view.raise_on_missing_translations = true
   else
     config.i18n.raise_on_missing_translations = true
   end
+
+  if Rails.gem_version >= Gem::Version.new("7.0")
+    config.active_support.cache_format_version = 7.0
+  end
+
+  # Store uploaded files on the local file system in a temporary directory.
+  config.active_storage.service = :test
 end

@@ -23,10 +23,10 @@ RSpec.feature "Log search", type: :feature do
   end
 
   def have_records_table(rows:)
-    have_css("[role=main] table tr[data-url]", count: rows)
+    have_css("table tr[data-url]", count: rows)
   end
 
   def submit_search
-    page.execute_script("$('.search').submit()")
+    page.find_field("Search").send_keys(:enter)
   end
 end

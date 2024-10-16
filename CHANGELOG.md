@@ -17,6 +17,143 @@
 
 ## Changes
 
+### 1.0.0.beta1 (February 5, 2024)
+
+In this release, the assets Administrate requires are now bundled in with the
+gem itself. You might need to do something to try this release out and we'd
+like to hear from you about how this goes! Please open an issue if you have any
+troubles.
+
+We have [an open PR to document how to work with custom assets][pr2467], if
+that's something you're doing.
+
+The plan is to release a couple of "beta" releases, followed by a release
+candidate after we've ironed out the migration requirements.
+
+* [OPTIM] [#2508] Lint Ruby with standardrb
+* [COMPAT] [#2507] Add .node-version to test against Node v20.11.0
+* [CHANGE] [#2397] Start bundling compiled assets in the Gem
+* [UI] [#2492] Switch to using @thoughtbot/stylelint-config
+* [BUGFIX] [#2498] Enable running workflows from forks
+
+[pr2467]: https://github.com/thoughtbot/administrate/pull/2475
+
+### 0.20.1 (January 24, 2024)
+
+In `0.20.0`, we introduced a regression which potentially meant you might
+get a `NameError` because of a missing import on `Administrate::VERSION`,
+this fixes that and two other minor issues as well.
+
+* [BUGFIX] [#2494] Fix build-changelog with no template changes
+* [BUGFIX] [#2491] Fix missing `Administrate::VERSION` reference
+* [DOC] [#2489] Fix path in documentation
+
+### 0.20.0 (January 17, 2024)
+
+This is our final release before v1.0.0, which will bring with it a big
+change around how we handle our CSS and JS assets. You'll most likely need
+to do some work to update, and we'll be publishing release candidate releases
+to help learn along the way. If you can, we'd love it if you could give them a
+try and report any problems you face!
+
+The following templates have changed since v0.19.0:
+
+  app/views/administrate/application/_form.html.erb
+  app/views/administrate/application/show.html.erb
+  app/views/fields/has_one/_form.html.erb
+  app/views/fields/has_one/_show.html.erb
+
+If your application overrides any of them, make sure to review your
+custom templates to ensure that they remain compatible.
+
+* [FEATURE] [#2484] Yield created resource if block is given
+* [OPTIM] [#2473] Remove CircleCI
+* [COMPAT] [#2485] Switch to the Sentry Ruby & Rails gems
+* [UI] [#2422] Allow grouping fields (new, edit and show)
+* [COMPAT] [#2479] Use a dedicated ActiveSupport::Deprecation instance
+* [COMPAT] [#2483] Start testing against Ruby 3.3
+* [BUGFIX] [#2480] Fix the bundle audit workflow
+* [COMPAT] [#1932] Start testing on GitHub Actions
+* [OPTIM] [#2418] Build SQL with Arel instead of from strings
+* [UI] [#2405] Add form field hints
+* [COMPAT] [#2462] Avoid open-ended dependencies
+* [COMPAT] [#2419] Update `selenium-webdriver` and remove `webdrivers`
+* [COMPAT] [#2469] Drop support for Ruby 2.7, since it's EOL
+* [BUGFIX] [#2427] Support all number helpers of ActiveSupport::NumberHelper
+* [DOC] [#2443] Add sample app path to CONTRIBUTING.md
+* [FEATURE] [#2415] hasMany collection columns
+* [BUGFIX] [#2403] Add Administrate::Punditize methods as module methods
+* [COMPAT] [#2433] Add GitHub Actions as an ecosystem for Dependabot
+* [COMPAT] [#2428] Enable Rails 7 on CI
+* [COMPAT] [#2410] Another year, another change to how to deal with webdrivers
+* [DOC] [#2408] Example app: change float column types to decimal
+
+### 0.19.0 (July 18, 2023)
+
+Once again, a big catchup release with lots of miscellaneous compatibility
+improvements, bug fixes and some nice new feature improvements. Thanks to
+everyone who contributed the PRs below!
+
+The following templates have changed since v0.18.0:
+
+  app/views/administrate/application/_collection.html.erb
+  app/views/administrate/application/_index_header.html.erb
+  app/views/administrate/application/_navigation.html.erb
+  app/views/administrate/application/_pagination.html.erb
+  app/views/administrate/application/edit.html.erb
+  app/views/administrate/application/new.html.erb
+  app/views/administrate/application/show.html.erb
+  app/views/fields/has_many/_show.html.erb
+  app/views/fields/select/_form.html.erb
+  app/views/layouts/administrate/application.html.erb
+
+If your application overrides any of them, make sure to review your
+custom templates to ensure that they remain compatible.
+
+* [COMPAT] [#2399] Fix Rails 6.0 `load_server` incompatibility
+* [DOC] [#2377] Add a script to generate a draft CHANGELOG update
+* [COMPAT] [#2395] Upgrade Rails from 7.0.4.3 to 7.0.5.1
+* [FEATURE] [#2391] Field::Polymorphic accepts a call-able for the classes
+  option
+* [BUGFIX] [#2379] Use pundit policy_namespace in controllers
+* [DOC] [#2390] Update documentation URL to correct Heroku URL
+* [BUGFIX] [#2383] Fix backward compatible Pundit include
+* [FEATURE] [#2375] Add order option to Field::HasOne documentation
+* [COMPAT] [#2367] Update to Ruby 3.2.2
+* [COMPAT] [#2371] Adapt to deprecations in the Faker API
+* [BUGFIX] [#2348] Field::Select to handle ActiveRecord enums correctly
+* [COMPAT] [#2324] Update to Rails 7
+* [FEATURE] [#2356] make permitted_attributes support action
+* [FEATURE] [#2325] Enable ordering by HasOne fields
+* [DOC] [#2350] Fix link to demo app on customise_search.md
+* [BUGFIX] [#2292] Use correct key in unconventional associations
+* [DOC] [#2346] Better description for option
+* [COMPAT] [#2341] Bump Rails dependencies to 6.1.7.3
+* [I18n] [#2327] Make Japanese translations more natural
+* [COMPAT] [#2323] Start testing Ruby 3.2 on CircleCI
+* [COMPAT] [#2322] Switch from pry-rails to pry
+* [COMPAT] [#2318] Bump Rails dependencies to 6.1.7.2
+* [COMPAT] [#2319] Fix Selenium deprecation warnings on headless/opts
+* [COMPAT] [#2321] Switch to testing against Postgres 15
+* [COMPAT] [#2316] Checkout first to avoid failure due to ChromeDriver file in
+  target dir
+* [FEATURE] [#2308] Make overriding create resource easier
+* [BUGFIX] [#2304] Set empty string param values to nil
+* [COMPAT] [#2299] Update minimum supported Rails version on
+  docs/getting_started.md
+* [BUGFIX] [#2289] Fix behaviour of has_many pagination
+* [I18n] [#2280] Titleize the column not the user defined locale
+* [FEATURE] [#2274] Allow disabling pagination for has_many
+* [FEATURE] [#2260] Allow search filters with special characters
+* [BUGFIX] [#2275] Provide a better error message for NotAuthorizedErrors with
+  Modules
+* [BUGFIX] [#2261] Avoid singularizing namespace in
+  Administrate::ResourceResolver
+* [BUGFIX] [#2258] Handle custom pagination for has_many
+* [UI] [#2250] Make the select box has same style as has_many box
+* [FEATURE] [#2238] pass associated_class to collection from show
+* [I18n] [#2245] remove redundant ARIA roles from elements with implicit role
+
 ### 0.18.0 (August 12, 2022)
 
 This is a general catchup release. We've added `dart-sass` compatibility,

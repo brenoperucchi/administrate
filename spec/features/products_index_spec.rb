@@ -17,9 +17,9 @@ RSpec.describe "product index page" do
     visit admin_products_path
     click_row_for(product)
 
-    expect(current_path).to eq(admin_product_path(product))
     expect(page).to have_content(product.name)
     expect(page).to have_content(product.description)
+    expect(current_path).to eq(admin_product_path(product))
   end
 
   it "links to the edit page" do
@@ -36,5 +36,42 @@ RSpec.describe "product index page" do
     click_on("New product")
 
     expect(current_path).to eq(new_admin_product_path)
+  end
+
+  scenario "product sorted by has_one association" do
+    create(
+      :product,
+      product_meta_tag: build(:product_meta_tag, meta_title: "Gamma")
+    )
+    create(
+      :product,
+      product_meta_tag: build(:product_meta_tag, meta_title: "Alpha")
+    )
+    create(
+      :product,
+      product_meta_tag: build(:product_meta_tag, meta_title: "Beta")
+    )
+
+    visit admin_products_path
+
+    within :table do
+      expect(page).to have_css("tbody tr:nth-child(1)", text: "Gamma")
+      expect(page).to have_css("tbody tr:nth-child(2)", text: "Alpha")
+      expect(page).to have_css("tbody tr:nth-child(3)", text: "Beta")
+    end
+
+    click_on "Product Meta Tag"
+    within :table do
+      expect(page).to have_css("tbody tr:nth-child(1)", text: "Alpha")
+      expect(page).to have_css("tbody tr:nth-child(2)", text: "Beta")
+      expect(page).to have_css("tbody tr:nth-child(3)", text: "Gamma")
+    end
+
+    click_on "Product Meta Tag"
+    within :table do
+      expect(page).to have_css("tbody tr:nth-child(1)", text: "Gamma")
+      expect(page).to have_css("tbody tr:nth-child(2)", text: "Beta")
+      expect(page).to have_css("tbody tr:nth-child(3)", text: "Alpha")
+    end
   end
 end

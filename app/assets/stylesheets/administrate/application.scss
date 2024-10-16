@@ -2,7 +2,9 @@
 
 @import "reset/normalize";
 
-@import "selectize";
+@import "trix/dist/trix";
+@import "selectize/dist/css/selectize";
+@import "selectize/dist/css/selectize.default";
 
 @import "library/clearfix";
 @import "library/data-label";
@@ -25,5 +27,3 @@
 @import "components/navigation";
 @import "components/pagination";
 @import "components/search";
-
-@import "utilities/text-color";

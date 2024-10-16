@@ -7,11 +7,24 @@ describe Administrate::Generators::Views::LayoutGenerator, :generator do
     it "copies the layout template into the `admin/application` namespace" do
       allow(Rails::Generators).to receive(:invoke)
       expected_contents = File.read(
-        "app/views/layouts/administrate/application.html.erb",
+        "app/views/layouts/administrate/application.html.erb"
       )
 
       run_generator []
       contents = File.read(file("app/views/layouts/admin/application.html.erb"))
+
+      expect(contents).to eq(expected_contents)
+    end
+
+    it "copies the layout template into the `namespace=<namespace>` dir" do
+      allow(Rails::Generators).to receive(:invoke)
+      expected_contents = File.read(
+        "app/views/layouts/administrate/application.html.erb"
+      )
+      generated_file = file("app/views/layouts/console/application.html.erb")
+
+      run_generator ["--namespace", "console"]
+      contents = File.read(generated_file)
 
       expect(contents).to eq(expected_contents)
     end
@@ -32,8 +45,8 @@ describe Administrate::Generators::Views::LayoutGenerator, :generator do
 
       run_generator []
 
-      expect(Rails::Generators).
-        to invoke_generator("administrate:views:navigation")
+      expect(Rails::Generators)
+        .to invoke_generator("administrate:views:navigation")
     end
 
     it "copies the javascript partial into the `admin/application` namespace" do

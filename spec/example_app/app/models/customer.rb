@@ -4,17 +4,18 @@ class Customer < ApplicationRecord
     :territory,
     class_name: "Country",
     foreign_key: :country_code,
-    primary_key: :code,
+    primary_key: :code
   )
   has_many :log_entries, as: :logeable
 
   validates :name, presence: true
   validates :email, presence: true
 
-  KINDS = [
-    :standard,
-    :vip,
-  ].freeze
+  KINDS = {
+    "standard" => "kind:std",
+    "vip" => "kind:vip"
+  }.freeze
+  enum kind: KINDS
 
   def admin?
     false

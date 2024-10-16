@@ -24,6 +24,7 @@ By default, it renders:
   <%= render "stylesheet" %>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag if defined?(csp_meta_tag) %>
+  <%= render "javascript" %>
 </head>
 <body>
   <%= render "icons" %>
@@ -31,12 +32,10 @@ By default, it renders:
   <div class="app-container">
     <%= render "navigation" -%>
 
-    <main class="main-content" role="main">
+    <main class="main-content">
       <%= render "flashes" -%>
       <%= yield %>
     </main>
   </div>
-
-  <%= render "javascript" %>
 </body>
 </html>
