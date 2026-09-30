@@ -1,7 +1,6 @@
 require "administrate/field/associative.rb"
 require "administrate/page/collection"
 require "administrate/order"
-require "sentient_store.rb"
 
 module Administrate
   module Field
